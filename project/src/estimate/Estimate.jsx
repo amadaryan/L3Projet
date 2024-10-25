@@ -34,10 +34,18 @@ function PropertyDetails({ formData }) {
       <Header as="h3" className="section-header">Détails de la Propriété</Header>
       <List divided inverted relaxed>
         {details.map(({ label, value }, index) => (
-          <List.Item key={index}>
+          <List.Item key={index} style={{ paddingBottom: '8px' }}>
             <List.Content>
-              <List.Header>{label}</List.Header>
-              <List.Description>{value}</List.Description>
+              <Grid columns={2}>
+                <Grid.Row style={{ paddingTop: '18px', paddingBottom: '18px' }}>
+                  <Grid.Column width={8}>
+                    <List.Header>{label}</List.Header>
+                  </Grid.Column>
+                  <Grid.Column width={8}>
+                    <List.Description>{value}</List.Description>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
             </List.Content>
           </List.Item>
         ))}
@@ -45,6 +53,8 @@ function PropertyDetails({ formData }) {
     </Segment>
   );
 }
+
+
 
 // Composant pour afficher les résultats de l'estimation
 function EstimationResults({ adjustedPricePerM2, totalPrice }) {
