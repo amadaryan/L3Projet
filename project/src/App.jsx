@@ -3,9 +3,10 @@ import { AnimatePresence } from 'framer-motion';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './navbar/Navbar';
 import Home from './home/Home';
-import Estimate from './estimate/Estimate';
 import Form from './estimate/forms/Form';
+import Estimate from "./estimate/Estimate";
 import './App.scss';
+import ChoiceType from './estimate/ChoiceType';
 
 function App() {
   const location = useLocation();
@@ -15,8 +16,9 @@ function App() {
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
-          <Route path="/estimate" element={<Estimate />} />
+          <Route path="/choice-type" element={<ChoiceType />} />
           <Route path="/estimate/form" element={<Form />} />
+          <Route path="/estimation" element={<Estimate />} />
         </Routes>
       </AnimatePresence>
     </>

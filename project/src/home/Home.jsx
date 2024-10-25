@@ -29,7 +29,7 @@ function Home() {
       <div className="img"></div>
       <Link 
         className="estimateAnchor"
-        to="/estimate"
+        to="/choice-type"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >

@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Form, Header, Select, Input } from 'semantic-ui-react';
+import { useNavigate } from 'react-router-dom';
 import './MultiStepForm.scss';
 
 function MultiStepFormMaison() {
   const [step, setStep] = useState(1);
   const [animationClass, setAnimationClass] = useState('active');
+  const [isSubmitHovered, setIsSubmitHovered] = useState(false);
+  const pathRef = useRef(null);
+  const [pathLength, setPathLength] = useState(0);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     m2: '',
     dateCreation: '',
+    rue: '',
+    codePostal: '',
     etatMaison: '',
     etage: '',
     jardin: '',
@@ -27,34 +34,6 @@ function MultiStepFormMaison() {
     { key: 'f', text: 'F', value: 'F' },
     { key: 'g', text: 'G', value: 'G' },
   ];
-
-  const handleChange = (e, { name, value }) => {
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const nextStep = () => {
-    setAnimationClass('exit-next');
-    setTimeout(() => {
-      setStep((prevStep) => prevStep + 1);
-      setAnimationClass('active');
-    }, 600);
-  };
-
-  const prevStep = () => {
-    setAnimationClass('exit-prev');
-    setTimeout(() => {
-      setStep((prevStep) => prevStep - 1);
-      setAnimationClass('active');
-    }, 600);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form data submitted:', formData);
-  };
 
   const etatOptions = [
     { key: 'neuf', text: 'Neuf', value: 'neuf' },
@@ -78,6 +57,60 @@ function MultiStepFormMaison() {
     { key: 'non', text: 'Non', value: 'non' },
   ];
 
+  useEffect(() => {
+    if (pathRef.current) {
+      const length = pathRef.current.getTotalLength();
+      setPathLength(length);
+      pathRef.current.style.strokeDasharray = length;
+      pathRef.current.style.strokeDashoffset = length;
+    }
+  }, []);
+
+  const getStrokeDashOffset = () => {
+    if (pathLength === 0) return 0;
+    const totalSteps = 4;
+    return pathLength - (step / totalSteps) * pathLength;
+  };
+
+  const handleChange = (e, { name, value }) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const nextStep = () => {
+    if (step < 4) {
+      setAnimationClass('exit-next');
+      setTimeout(() => {
+        setStep((prevStep) => prevStep + 1);
+        setAnimationClass('active');
+      }, 600);
+    }
+  };
+
+  const prevStep = () => {
+    if (step > 1) {
+      setAnimationClass('exit-prev');
+      setTimeout(() => {
+        setStep((prevStep) => prevStep - 1);
+        setAnimationClass('active');
+      }, 600);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate('/estimation', { state: { formData } });
+  };
+
+  useEffect(() => {
+    if (pathRef.current) {
+      const offset = getStrokeDashOffset();
+      pathRef.current.style.strokeDashoffset = offset;
+    }
+  }, [step, pathLength]);
+
   return (
     <div className="MultiStepForm" style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', color: '#ffffff' }}>
       <Form onSubmit={handleSubmit}>
@@ -85,10 +118,10 @@ function MultiStepFormMaison() {
           <div className={`formStep ${animationClass}`}>
             <Header as="h2" textAlign="center" className="header-step">
               <div className="step-highlight">Étape 1</div>
-              <div className="step-description">Surface et Date de Création</div>
+              <div className="step-description">Surface, Rue, et Date de Création</div>
             </Header>
             <Form.Field className="uniform-input">
-              <label style={{ color: '#ffffff' }}>Surface (m²)</label>
+              <label>Surface (m²)</label>
               <Input
                 type="number"
                 name="m2"
@@ -99,7 +132,29 @@ function MultiStepFormMaison() {
               />
             </Form.Field>
             <Form.Field className="uniform-input">
-              <label style={{ color: '#ffffff' }}>Date de création de la maison</label>
+              <label>Rue</label>
+              <Input
+                type="text"
+                name="rue"
+                value={formData.rue}
+                onChange={handleChange}
+                placeholder="Nom de la rue"
+                className="uniform-input"
+              />
+            </Form.Field>
+            <Form.Field className="uniform-input">
+              <label>Code Postal</label>
+              <Input
+                type="text"
+                name="codePostal"
+                value={formData.codePostal}
+                onChange={handleChange}
+                placeholder="Code postal"
+                className="uniform-input"
+              />
+            </Form.Field>
+            <Form.Field className="uniform-input">
+              <label>Date de création de la maison</label>
               <Input
                 type="date"
                 name="dateCreation"
@@ -120,7 +175,7 @@ function MultiStepFormMaison() {
               <div className="step-description">État et Étages</div>
             </Header>
             <Form.Field className="uniform-input">
-              <label style={{ color: '#ffffff' }}>État de la maison</label>
+              <label>État de la maison</label>
               <Select
                 name="etatMaison"
                 value={formData.etatMaison}
@@ -131,7 +186,7 @@ function MultiStepFormMaison() {
               />
             </Form.Field>
             <Form.Field className="uniform-input">
-              <label style={{ color: '#ffffff' }}>Étage</label>
+              <label>Étage</label>
               <Input
                 type="number"
                 name="etage"
@@ -158,7 +213,7 @@ function MultiStepFormMaison() {
               <div className="step-description">Jardin, Piscine et Balcon</div>
             </Header>
             <Form.Field className="uniform-input">
-              <label style={{ color: '#ffffff' }}>Jardin</label>
+              <label>Jardin</label>
               <Select
                 name="jardin"
                 value={formData.jardin}
@@ -169,7 +224,7 @@ function MultiStepFormMaison() {
               />
             </Form.Field>
             <Form.Field className="uniform-input">
-              <label style={{ color: '#ffffff' }}>Piscine</label>
+              <label>Piscine</label>
               <Select
                 name="piscine"
                 value={formData.piscine}
@@ -180,7 +235,7 @@ function MultiStepFormMaison() {
               />
             </Form.Field>
             <Form.Field className="uniform-input">
-              <label style={{ color: '#ffffff' }}>Balcon</label>
+              <label>Balcon</label>
               <Select
                 name="balcon"
                 value={formData.balcon}
@@ -207,7 +262,7 @@ function MultiStepFormMaison() {
               <div className="step-description">Nombre de Pièces et Consommation d'Énergie</div>
             </Header>
             <Form.Field className="uniform-input">
-              <label style={{ color: '#ffffff' }}>Nombre de pièces</label>
+              <label>Nombre de pièces</label>
               <Input
                 type="number"
                 name="nbPiece"
@@ -218,7 +273,7 @@ function MultiStepFormMaison() {
               />
             </Form.Field>
             <Form.Field className="uniform-input">
-              <label style={{ color: '#ffffff' }}>Consommation d'énergie (Classe)</label>
+              <label>Consommation d'énergie (Classe)</label>
               <Select
                 name="consoEnergie"
                 value={formData.consoEnergie}
@@ -232,13 +287,27 @@ function MultiStepFormMaison() {
               <button type="button" onClick={prevStep} className="custom-button">
                 Précédent
               </button>
-              <button type="submit" className="custom-button">
+              <button
+                type="submit"
+                className="custom-button"
+                onMouseEnter={() => setIsSubmitHovered(true)}
+                onMouseLeave={() => setIsSubmitHovered(false)}
+              >
                 Soumettre
               </button>
             </div>
           </div>
         )}
       </Form>
+
+      <svg className="lineFinal" viewBox="0 0 1924.23193 468.72688">
+        <path
+          ref={pathRef}
+          d="M0,676c85.31194-2.004,213.161,2.17926,362,37,434.84753,101.73206,468.42682,329.18506,706,313,264.22375-18.00061,348.21155-307.898,787-362,27.63123-3.40692,50.39514-5.10516,65-6"
+          transform="translate(1.17417 -608.09359)"
+          style={{ stroke: isSubmitHovered ? 'rgb(180, 120, 75)' : 'rgba(255, 255, 255, 0.1)', transition: '0.6s ease-in-out' }}
+        />
+      </svg>
     </div>
   );
 }
