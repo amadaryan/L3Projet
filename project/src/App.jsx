@@ -4,6 +4,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './navbar/Navbar';
 import Home from './home/Home';
 import Estimate from './estimate/Estimate';
+import Form from './estimate/forms/Form';
 import './App.scss';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
           <Route path="/estimate" element={<Estimate />} />
+          <Route path="/estimate/form" element={<Form />} />
         </Routes>
       </AnimatePresence>
     </>

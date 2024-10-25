@@ -1,3 +1,48 @@
 .Navbar {
-    
+  margin: 0 auto;
+  padding: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  a {
+    color: white;
+    text-decoration: none;
+    line-height: 0;
+  }
+
+  .iconH {
+    font-family: "Hisquins";
+    font-size: 3em;
+    color: rgb(180, 120, 80);
+  }
+
+  .delimitor {
+    color: white;
+  }
+
+  .element {
+    margin: 0 5px;
+    padding: 0 10px;
+    font-family: "Montserrat";
+    color: white;
+    background-color: transparent;
+    border: none;
+    transition: 0.2s;
+    cursor: pointer;
+    &:hover {
+      color: rgb(180, 120, 80);
+    }
+  }
+
+  hr {
+    width: 80%;
+    margin: 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }
 }
