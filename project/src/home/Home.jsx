@@ -6,13 +6,16 @@ import Footer from '../footer/Footer';
 
 function Home() {
   const [svgColor, setSvgColor] = useState('rgba(255, 255, 255, 0.1)');
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   const handleMouseEnter = () => {
     setSvgColor('rgb(180, 120, 80)');
+    setIsButtonHovered(true);
   };
 
   const handleMouseLeave = () => {
     setSvgColor('rgba(255, 255, 255, 0.1)');
+    setIsButtonHovered(false);
   };
 
   const svgStyle = {
@@ -22,11 +25,11 @@ function Home() {
 
   return (
     <div className="Home">
+      <div className={`img ${isButtonHovered ? 'img-glow' : ''}`}></div>
       <div className="title">
         <h1>hESTia</h1>
         <h2>Quand la déesse du logis vous accompagne.</h2>
       </div>
-      <div className="img"></div>
       <Link 
         className="estimateAnchor"
         to="/choice-type"
